@@ -478,13 +478,97 @@ Person ming = new Person();
 }
 ***
 
+方法返回值通过return语句实现，如果没有返回值，返回类型设置为void，可以省略return。
 
+### private方法
 
+有public方法，自然就有private方法。
 
+和private字段一样，private方法不允许外部调用，那我们定义private方法有什么用？
 
+定义private方法的理由是内部方法是可以调用private方法的。例如：
 
+// private method
+public class Main {
+    public static void main(String[] args) {
+        Person ming = new Person();
+        ming.setBirth(2008);
+        System.out.println(ming.getAge());
+    }
+}
 
+class Person {
+    private String name;
+    private int birth;
 
+    public void setBirth(int birth) {
+        this.birth = birth;
+    }
+
+    public int getAge() {
+        return calcAge(2019); // 调用private方法
+    }
+
+    // private方法:
+    private int calcAge(int currentYear) {
+        return currentYear - this.birth;
+    }
+}
+
+观察上述代码，calcAge()是一个private方法，外部代码无法调用，但是，内部方法getAge()可以调用它。
+
+此外，我们还注意到，这个Person类只定义了birth字段，没有定义age字段，
+
+获取age时，通过方法getAge()返回的是一个实时计算的值，并非存储在某个字段的值。
+
+这说明方法可以封装一个类的对外接口，调用方不需要知道也不关心Person实例在内部到底有没有age字段。
+
+### this变量
+
+在方法内部，可以使用一个隐含的变量this，它始终指向当前实例。因此，通过this.field就可以访问当前实例的字段。
+
+如果没有命名冲突，可以省略this。例如：
+
+class Person {
+    private String name;
+
+    public String getName() {
+        return name; // 相当于this.name
+    }
+}
+但是，如果有局部变量和字段重名，那么局部变量优先级更高，就必须加上this：
+
+class Person {
+    private String name;
+
+    public void setName(String name) {
+        this.name = name; // 前面的this不可少，少了就变成局部变量name了
+    }
+}
+
+### 方法参数
+  方法可以包含0个或任意个参数。方法参数用于接收传递给方法的变量值。
+  
+  调用方法时，必须严格按照参数的定义一一传递。例如：
+
+class Person {
+    ...
+    public void setNameAndAge(String name, int age) {
+        ...
+    }
+}
+
+调用这个setNameAndAge()方法时，必须有两个参数，且第一个参数必须为String，第二个参数必须为int：
+
+Person ming = new Person();
+
+ming.setNameAndAge("Xiao Ming"); // 编译错误：参数个数不对
+
+ming.setNameAndAge(12, "Xiao Ming"); // 编译错误：参数类型不对
+
+### 可变参数
+
+可变参数用\\类型... 定义
 
 
 
