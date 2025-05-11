@@ -17,6 +17,7 @@ Java入口程序规定的方法必须是静态方法，方法名必须为main，
 基本类型的变量和引用类型的变量
 
 基本类型变量 在Java中，变量必须先定义后使用 
+
 同一变量无需再次定义变量类型  变量可重新赋值
 
 ## 4、基本数据类型 
@@ -27,6 +28,7 @@ CPU可直接进行运算的类型
 布尔类型：boolean
 
 计算机内存的最小存储单元是字节（byte），一个字节就是一个8位二进制数，即8个bit。
+
 它的二进制表示范围从00000000~11111111，换算成十进制是0~255，换算成十六进制是00~ff。
 
 内存单元从0开始编号，称为内存地址
@@ -118,23 +120,27 @@ CPU可直接进行运算的类型
   
   int c = n >> 3;  // 00000000 00000000 00000000 00000000 = 0
 
-  >> 有符号位移运算  >>>无符号位移运算 右移后高位总是补0 因此对一个负数进行>>>右移 会变成正数 最高位有1变成0
+  >>有符号位移运算  >>>无符号位移运算 右移后高位总是补0
+     因此对一个负数进行>>>右移 会变成正数 最高位有1变成0
 
 ### 位运算
   
   与运算的规则是，必须两个数同时为1，结果才为1：
+  
   n = 0 & 0; // 0
   n = 0 & 1; // 0
   n = 1 & 0; // 0
   n = 1 & 1; // 1
 
   或运算的规则是，只要任意一个为1，结果就为1：
+  
   n = 0 | 0; // 0
   n = 0 | 1; // 1
   n = 1 | 0; // 1
   n = 1 | 1; // 1
 
   非运算的规则是，0和1互换：
+  
   n = ~0; // 1
   n = ~1; // 0
 
@@ -147,8 +153,10 @@ CPU可直接进行运算的类型
 
 ### 类型自动提升 和 强制转型
 
-如果参与运算的两个数类型不一致 那么计算自动提升类型为较大的类型
+如果参与运算的两个数类型不一致 
+那么计算自动提升类型为较大的类型
 // 类型自动提升与强制转型
+
 public class Main {
     public static void main(String[] args) {
         short s = 1234;
@@ -158,8 +166,12 @@ public class Main {
     }
 }
 
-也可以将结果强制转型，即将大范围的整数转型为小范围的整数。强制转型使用(类型)，例如，将int强制转型为short：
+也可以将结果强制转型，即将大范围的整数转型为小范围的整数。
+
+强制转型使用(类型)，例如，将int强制转型为short：
+
 int i = 12345;
+
 short s = (short) i; // 12345
 
 要注意，超出范围的强制转型会得到错误的结果，原因是转型时，int的两个高位字节直接被扔掉，仅保留了低位的两个字节：
@@ -175,6 +187,7 @@ public class Main {
         System.out.println(s2);
     }
 }
+
 因此，强制转型的结果很可能是错的。
 
 ## 浮点数运算
@@ -190,11 +203,13 @@ public class Main {
 
 ## 字符和字符串
   字符类型char是基本数据类型 一个char保存一个Unicode字符
+  
   int n1 = 'A' 
   int n2 = '中'
 
   字符串类型String是引用类型  一个字符穿可以存储0-任意个字符
   如果用+连接字符串和其他数据类型，会将其他数据类型先自动转型为字符串，再连接
+  
   java 字符串重要特性 字符串不可变
   // 字符串不可变
 public class Main {
@@ -205,7 +220,6 @@ public class Main {
         System.out.println(s); // 显示 world  
     }
 }
-
 
   java13 可以使用""" xxx """ 表示多行字符串了
 
@@ -250,11 +264,19 @@ public class Main {
 
 ## 输入/输出
   ### 输出
-  如果要把数据显示成我们期望的格式，就需要使用格式化输出的功能。格式化输出使用System.out.printf()，通过使用占位符%?，printf()可以把后面的参数格式化成指定格式：
+  如果要把数据显示成我们期望的格式，就需要使用格式化输出的功能。
+  
+  格式化输出使用System.out.printf()，
+  
+  通过使用占位符%?，printf()可以把后面的参数格式化成指定格式：
+
+  例
     double d = 3.1415926;
     System.out.printf("%.2f\n", d); // 显示两位小数3.14
     System.out.printf("%.4f\n", d); // 显示4位小数3.1416
-格式化 
+    
+  格式化占位符：
+  
   占位符	说明
   %d	格式化输出整数
   %x	格式化输出十六进制整数
@@ -263,19 +285,179 @@ public class Main {
   %s	格式化字符串
 
  ### 输入
-   使用scanner 创建scanner对象并传入System.in 然后使用scanner.nextline() 读取用户输入字符串
-   scanner.nextInt() 读取用户输入整数
+   使用scanner 创建scanner对象并传入System.in 
    
+   再使用scanner.nextline() 读取用户输入字符串
+   或
+   scanner.nextInt() 读取用户输入整数
 
+## if条件判断
 
+### if
+  通过 (条件) 判断是否满足 满足时执行{}中的语句
+  if(){
+    //abcs
+  }
+  
+### else
+  当条件判断为false时 将执行else语句块
+  if(){}
+  else if(){}
+  else {}
 
+  判断引用类型的变量内容是否相等 ，必须使用equals()方法
+  引用类型的变量可以指向不同对象 内容相同 类似与指向不同的地址
+  String s1
 
+## Switch多重选择
+  根据option 匹配到对应的case 若无匹配会执行default
+  可以比较字符串 还可以比较枚举
 
+  int option = 1;
+        switch (option) {
+        case 1:
+            System.out.println("Selected 1");
+            break;   //要加break 否则 下列语句会继续执行一直遇到break
+        case 2:
+            System.out.println("Selected 2");
+            break;
+        case 3:
+            System.out.println("Selected 3");
+            break;
+        default:
+            System.out.println("Selected other");
+            yield pdd;
+            break;
+        }
+  通过yield 返回一个值作为switch语句返回值
 
+## while循环
 
+  while(条件)满足时继续循环，条件不满足时退出循环
+  每次循环开始前 判断条件是否成立 
+  
+   int sum = 0; // 累加的和，初始化为0
+        int n = 1;
+        while (n <= 100) { // 循环条件是n <= 100
+            sum = sum + n; // 把n累加到sum中
+            n ++; // n自身加1
+        }
 
+## do..while循环
 
+  先执行循环再判断条件 因此循环最少都会执行一次
+  
+## for循环
+  略
+  先初始化计数器 在每次开始循环前检查条件 
+### for each循环
+  int[] ns = { 1, 4, 9, 16, 25 };
+  for (int n : ns) {
+      System.out.println(n);
+  }
+  for each循环的变量n 不再是计数器 而是直接对应到数组的每个元素 
+  且也不只是 数组  for each循环能够遍历所有"可迭代"的数据类型 包括List、Map等
+
+### break和continue
+  在循环过程中，使用break语句跳出当前循环 既此for或while语句结束不再执行
+  而continue 则是提前结束本次循环，直接继续执行下次循环
+  
+## 数组操作
+### 遍历数组
+    1、 for循环
+    2、 for each循环
+      public class Main {
+    public static void main(String[] args) {
+        int[] ns = { 1, 4, 9, 16, 25 };
+        for (int n : ns) {
+            System.out.println(n);
+        }
+    }
+}
+      //其中变量n 直接拿到ns数组的元素 而不是索引
+
+### 打印数组内容
+    1、循环打印
+    2、用轮子 Arrays.toString();
+
+### 数组排序
+    1、冒泡排序
+      一个大循环遍历数组一个小循环的对比
     
+### 多维数组
+    1、二维数组---数组里元素是数组
+    int[][] ns = {
+            { 1, 2, 3, 4 },
+            { 5, 6, 8 },
+            { 9, 10, 11, 12，77 }
+        };
+    用两层循环打印 或者 轮子 Arrays.deepToString()。
+    2、三维数组---数组里元素是数组-再放数组
+
+### 命令行参数
+    Java程序的入口是main方法 ，而main方法可以接受一个命令行参数，它是一个String[]数组
+
+## 面向对象编程
+### 面向对象基础
+
+抽象概念 作为类（class)  转具体则为实例(Instance)
+
+class是一种对象模板 定义了如何创建实例,因此class本身是一种数据类型
+instance 是对象实例 根据class模板创建的实例 类型相同 但是属性可能不同
+
+### 定义class 
+
+class Person{
+  public String name;
+  public int age;
+}
+
+一个class可以包含多个字段（field），字段用来描述一个类的特征。
+
+上面的person类，我们定义了两个字段。
+
+一个是String类型的字段，命名为name，一个是int类型的字段，命名为age。
+
+因此，通过class，把一组数据汇集到一个对象上，实现了数据封装。
+
+### 创建实例
+
+定义了class，只是定义了对象模版，而要根据对象模版创建出真正的对象实例，必须用new操作符。
+
+new操作符可以创建一个实例，然后，我们需要定义一个引用类型的变量来指向这个实例：
+
+Person ming = new Person();
+
+上述代码创建了一个Person类型的实例，并通过变量ming指向它。
+
+注意区分Person ming是定义Person类型的变量ming，而new Person()是创建Person实例。
+
+>> 一个Java源文件可以包含多个类的定义，但只能定义一个public类，且public类名必须与文件名一致。如果要定义多个public类，必须拆到多个Java源文件中。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
