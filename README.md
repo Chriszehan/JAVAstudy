@@ -679,6 +679,134 @@ class Student extends Person {
 ** 注意
 ** 子类自动获得了父类的所有字段，严禁定义与父类重名的字段！
 
+// 我们在定义Person的时候，没有写extends。在Java中，没有明确写extends的类，编译器会自动加上extends Object。所以，任何类，除了Object，都会继承自某个类。 下图是Person、Student的继承树
+       ┌───────────┐
+       │  Object   │
+       └───────────┘
+             ▲
+             │
+       ┌───────────┐
+       │  Person   │
+       └───────────┘
+          ▲     ▲
+          │     │
+          │     │
+┌───────────┐ ┌───────────┐
+│  Student  │ │  Teacher  │
+└───────────┘ └───────────┘
+Java只允许一个class继承自一个类，因此，一个类有且仅有一个父类。只有Object特殊，它没有父类。
+
+### protected
+继承有个特点，就是子类无法访问父类的private字段或者private方法。例如，Student类就无法访问Person类的name和age字段：
+
+class Person {
+    private String name;
+    private int age;
+}
+
+class Student extends Person {
+    public String hello() {
+        return "Hello, " + name; // 编译错误：无法访问name字段
+    }
+}
+
+这使得继承的作用被削弱了。
+
+为了让子类可以访问父类的字段，我们需要把private改为protected。
+
+用protected修饰的字段可以被子类访问：
+
+class Person {
+    protected String name;
+    protected int age;
+}
+
+class Student extends Person {
+    public String hello() {
+        return "Hello, " + name; // OK!
+    }
+}
+
+因此，protected关键字可以把字段和方法的访问权限控制在继承树内部，
+一个protected字段和方法可以被其子类，以及子类的子类所访问
+
+### super
+super关键字表示父类（超类）。子类引用父类的字段时，可以用super.fieldName。例如：
+
+class Student extends Person {
+    public String hello() {
+        return "Hello, " + super.name;
+    }
+}
+实际上，这里使用super.name，或者this.name，或者name，效果都是一样的。
+编译器会自动定位到父类的name字段。
+
+但是，在某些时候，就必须使用super。我们来看一个例子：
+
+// super
+public class Main {
+    public static void main(String[] args) {
+        Student s = new Student("Xiao Ming", 12, 89);
+    }
+}
+
+class Person {
+    protected String name;
+    protected int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+class Student extends Person {
+    protected int score;
+
+    public Student(String name, int age, int score) {
+        this.score = score;
+    }
+}
+
+运行上面的代码，会得到一个编译错误，大意是在Student的构造方法中，无法调用Person的构造方法。
+
+这是因为在Java中，任何class的构造方法，第一行语句必须是调用父类的构造方法。
+
+如果没有明确地调用父类的构造方法，编译器会帮我们自动加一句super();
+
+所以，Student类的构造方法实际上是这样：
+
+class Student extends Person {
+    protected int score;
+
+    public Student(String name, int age, int score) {
+        super(); // 自动调用父类的构造方法
+        this.score = score;
+    }
+}
+
+但是，Person类并没有无参数的构造方法，因此，编译失败。
+
+解决方法是调用Person类存在的某个构造方法。例如：
+
+class Student extends Person {
+    protected int score;
+
+    public Student(String name, int age, int score) {
+        super(name, age); // 调用父类的构造方法Person(String, int)
+        this.score = score;
+    }
+}
+
+这样就可以正常编译了！
+
+因此我们得出结论：如果父类没有默认的构造方法，子类就必须显式调用super() 
+
+并给出参数以便让编译器定位到父类的一个合适的构造方法。
+
+这里还顺带引出了另一个问题：即子类 <b>不会继承</b>任何父类的构造方法。
+
+子类默认的构造方法是编译器自动生成的，不是继承的。
 
 
 
