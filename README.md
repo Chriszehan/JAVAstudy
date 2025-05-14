@@ -733,40 +733,39 @@ class Student extends Person {
 ### super
 super关键字表示父类（超类）。子类引用父类的字段时，可以用super.fieldName。例如：
 
-class Student extends Person {
+  class Student extends Person {
     public String hello() {
         return "Hello, " + super.name;
     }
-}
+  }
 实际上，这里使用super.name，或者this.name，或者name，效果都是一样的。
 编译器会自动定位到父类的name字段。
 
 但是，在某些时候，就必须使用super。我们来看一个例子：
 
-// super
-public class Main {
+  public class Main {
     public static void main(String[] args) {
         Student s = new Student("Xiao Ming", 12, 89);
     }
-}
+  }
 
-class Person {
+
+  class Person {
     protected String name;
     protected int age;
-
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
     }
-}
+  }
 
-class Student extends Person {
+
+  class Student extends Person {
     protected int score;
-
     public Student(String name, int age, int score) {
         this.score = score;
     }
-}
+  }
 
 运行上面的代码，会得到一个编译错误，大意是在Student的构造方法中，无法调用Person的构造方法。
 
@@ -776,27 +775,25 @@ class Student extends Person {
 
 所以，Student类的构造方法实际上是这样：
 
-class Student extends Person {
+  class Student extends Person {
     protected int score;
-
     public Student(String name, int age, int score) {
         super(); // 自动调用父类的构造方法
         this.score = score;
     }
-}
+  }
 
 但是，Person类并没有无参数的构造方法，因此，编译失败。
 
 解决方法是调用Person类存在的某个构造方法。例如：
 
-class Student extends Person {
+  class Student extends Person {
     protected int score;
-
     public Student(String name, int age, int score) {
         super(name, age); // 调用父类的构造方法Person(String, int)
         this.score = score;
     }
-}
+  }
 
 这样就可以正常编译了！
 
@@ -808,11 +805,20 @@ class Student extends Person {
 
 子类默认的构造方法是编译器自动生成的，不是继承的。
 
+### 向上转型
+如果一个引用变量的类型是Student，那么它可以指向一个Student类型的实例：
 
+Student s = new Student();
 
+如果一个引用类型的变量是Person，那么它可以指向一个Person类型的实例：
 
+Person p = new Person();
 
+那么Person p = new Student()是向上转型
 
+因为Student继承自Person，因此，它拥有Person的全部功能。
+
+Person类型的变量，如果指向Student类型的实例，对它进行操作，是没有问题的！
 
 
 
