@@ -568,7 +568,133 @@ ming.setNameAndAge(12, "Xiao Ming"); // 编译错误：参数类型不对
 
 ### 可变参数
 
-可变参数用\\类型... 定义
+可变参数用类型... 定义，可变参数相当于数组类型：
+
+class Group {
+    private String[] names;
+
+    public void setNames(String... names) {
+        this.names = names;
+    }
+}
+
+
+上面的setNames() 定义了一个可变参数。调用时，可以这么写：
+Group g = new Group();
+Group g = new Group();
+g.setNames("Xiao Ming", "Xiao Hong", "Xiao Jun"); // 传入3个String
+g.setNames("Xiao Ming", "Xiao Hong"); // 传入2个String
+g.setNames("Xiao Ming"); // 传入1个String
+g.setNames(); // 传入0个String
+完全可以把可变参数改写为为String[] 类型：
+class Group{
+  private String[] names;
+
+  public void setNames(String[] names){
+    this.names = names;
+  }
+}
+
+但是，调用方需要自己先构造String[]，比较麻烦。例如：
+
+Group g = new Group();
+g.setNames(new String[] {"Xiao Ming", "Xiao Hong", "Xiao Jun"}); // 传入1个String[]
+另一个问题是，调用方可以传入null：
+
+Group g = new Group();
+g.setNames(null);
+而可变参数可以保证无法传入null，因为传入0个参数时，接收到的实际值是一个空数组而不是null。
+
+### 参数绑定
+
+调用函数时把参数传递给实例方法时，调用时传递的值会按照参数位置一一绑定
+
+#### 传递基础类型参数 和 引用参数区别
+
+基本类型参数的传递，是调用方值的复制
+
+引用类型参数的传递，调用方的变量，和接收方的参数变量，指向的是同一个对象。
+双方任意一方对这个对象的修改，都会影响对方（因为指向同一个对象嘛）。
+
+      Person p = new Person();
+      String[] fullname = new String[] { "Homer", "Simpson" };
+      p.setName(fullname); // 传入fullname数组
+      System.out.println(p.getName()); // "Homer Simpson"
+      fullname[0] = "Bart"; // fullname数组的第一个元素修改为"Bart"
+      System.out.println(p.getName()); // 输出"Bart Simpson"
+
+## 构造方法
+
+创建实例时，经常需要同时初始化这个实例的字段
+Person ming = new Person();
+ming.setName("小明");
+ming.setAge(12);
+如果不嗲用setName() 或者 setAge() 则实例内部状态不正确
+
+如何解决？
+通过构造方法。在创建实例的时候 一次性传入name 和age, 完成初始化：
+
+构造方法的参数没有限制，在方法内部，也可以编写任意语句。
+但是构造方法没有返回值（没有void）,调用构造方法，必须用new操作符。
+
+### 默认构造方法
+编译器自带一个默认构造方法 没有参数 没有执行语句
+
+class Person{
+    pulic Person(){}
+}
+
+注意如 自定义了一个构造方法，那么编译器不再自动创建默认构造方法
+
+如想保留不带参数的构造方法，只能把两个构造方法都定义出
+
+在创建对象实例时，1、会先初始化 类中定义的字段 ，例如，int age = 10;表示字段初始化为10
+2、执行构造方法的代码
+
+## 方法重载
+一个类中可以定义多个方法，如果功能类似只是参数不同，则可以同一个命名 但是各自参数不同
+
+## 继承
+extends关键字实现继承
+例：
+class Person {
+    private String name;
+    private int age;
+
+    public String getName() {...}
+    public void setName(String name) {...}
+    public int getAge() {...}
+    public void setAge(int age) {...}
+}
+
+class Student extends Person {
+    // 不要重复name和age字段/方法,
+    // 只需要定义新增score字段/方法:
+    private int score;
+
+    public int getScore() { … }
+    public void setScore(int score) { … }
+}
+
+** 注意
+** 子类自动获得了父类的所有字段，严禁定义与父类重名的字段！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
