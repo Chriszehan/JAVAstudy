@@ -1078,21 +1078,72 @@ class Person {
 
 
 
+## 静态字段和静态方法
+
+class 中定义的字段，被称之为实例字段。实例字段的特点是，每个实例都有独立的字段，各个实例的同名字段互相不影响。
+
+还有一种字段，使用static修饰的字段，称为静态字段：static field。
+
+实例字段在每个实例中都有一个独立“空间”，但是静态字段只有一个共享“空间”，所有的实例都是共享某个字段
+
+class Person{
+
+  public String name;
+
+  public static int number;
+
+}
 
 
+对于静态字段，无论修改哪个实例的静态字段，效果都是一样的：所有实例的静态字段都被修改了，原因是静态字段并不属于实例：
 
+        ┌──────────────────┐
+ming ──▶│Person instance   │
+        ├──────────────────┤
+        │name = "Xiao Ming"│
+        │age = 12          │
+        │number ───────────┼──┐    ┌─────────────┐
+        └──────────────────┘  │    │Person class │
+                              │    ├─────────────┤
+                              ├───▶│number = 99  │
+        ┌──────────────────┐  │    └─────────────┘
+hong ──▶│Person instance   │  │
+        ├──────────────────┤  │
+        │name = "Xiao Hong"│  │
+        │age = 15          │  │
+        │number ───────────┼──┘
+        └──────────────────┘
 
+实际指向的都是Person class的静态字段。因此不推荐使用 实例变量.静态字段 去访问静态方法。
 
+因为在运行中 实例对下并没有静态字段，而是由于编译器可以根据实例类型自动转换为 类名.静态字段 来访问静态对象。
 
+推荐使用类名访问静态字段，这样可以理解为这个类本身具有字段。
 
+### 静态方法
+与静态字段对应，有静态方法。用static修饰的方法--静态方法
 
+调用实例方法必须通过一个实例变量，而调用静态方法则不需要实例变量，通过类名就可以调用。
 
+// static method
+public class Main{
+  public static void main(String[] args){
+    Person.setNumber(99);
+    Sout(Person.number);
+  }
+}
 
+class Person{
+  public static int number;
 
+  public static int setNumber(int value){
+      number = value;
+  }
+}
 
+因为静态方法属于class 而不属于实例。因此，静态方法内部，无法访问this变量，也无法访问实例字段，他只能访问静态字段。
 
-
-
+通过实例变量也可以调用静态方法，但这只是编译器
 
 
 
