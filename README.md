@@ -1418,6 +1418,93 @@ Inner Class和普通Class相比，除了能引用Outer实例外，还有一个�
 ### Anonymous Class
 还有一种定义Inner class的方法，它不需要在Outer class中明确定义这个Class，而是在方法内部，通过匿名类（Anonymous Class）来定义。示例下：
 
+// Anonymous Class
+public class Main {
+    public static void main(String[] args) {
+        Outer outer = new Outer("Nested");
+        outer.asyncHello();
+    }
+}
+
+class Outer {
+    private String name;
+
+    Outer(String name) {
+        this.name = name;
+    }
+
+    void asyncHello() {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Hello, " + Outer.this.name);
+            }
+        };
+        new Thread(r).start();
+    }
+}
+
+观察asycHello（）方法 ，我们在内部实例化了一个Runnable。Runnable本身是接口，接口时不能实例化，所以这里实际上是定义了一个实现Runnable接口的匿名类，并通过new实例化该匿名类，转型为Runnable。在定义匿名类的时候就必须实例化它，定义匿名类的写法如下：
+
+Runnable r = new Runnable(){
+
+    // 实现必要的抽象方法...
+};
+
+匿名类核Inner class一样 可以访问Outer class的private 字段和方法。之所以我们要定义匿名类，是因为我们在这里通常不关心类名，比直接定义Inner class可以少写很多代码。
+
+观察JAVA编译器编译后的.class 文件可以发现，Outer类被编译为Outer.class 如果有多个匿名类，Java编译器会将每个匿名类依次命名为Outer$1、Outer$2、Outer$3····
+
+除了接口外，匿名类也完全可以继承自普通类。观察一下代码：
+
+// Anonymous Class
+import java.util.HashMap;
+
+public class Main {
+    public static void main(String[] args) {
+        HashMap<String, String> map1 = new HashMap<>();
+        HashMap<String, String> map2 = new HashMap<>() {}; // 匿名类!
+        HashMap<String, String> map3 = new HashMap<>() {
+            {
+                put("A", "1");
+                put("B", "2");
+            }
+        };
+        System.out.println(map3.get("A"));
+    }
+}
+
+map1 是一个普通的HashMap实例，但map2是一个匿名类实例，只是该匿名类继承子HashMap。map3也是继承自一个Hashmap的匿名类实例，并且添加了static 代码块来初始化数据。观察编译输出可发下Main$1.class和Main$2.class两个匿名类文件。
+
+### Static Nested Class
+
+最后一种内部类和Inner class类似，但是使用了static修饰 称为静态内部类（static nested class）：
+
+// Static Nested Class
+public class Main {
+    public static void main(String[] args) {
+        Outer.StaticNested sn = new Outer.StaticNested();
+        sn.hello();
+    }
+}
+
+class Outer {
+    private static String NAME = "OUTER";
+
+    private String name;
+
+    Outer(String name) {
+        this.name = name;
+    }
+
+    static class StaticNested {
+        void hello() {
+            System.out.println("Hello, " + Outer.NAME);
+        }
+    }
+}
+
+用Static修饰的内部类和Innerclass有很大不同，它不再依附于Outer的实例，而是一个完全独立的类，因此无法引用Outer.this，但它可以访问Outer的private静态字段和静态方法。如果把StaticNested移到Outer之外，就失去了访问private的权限。
 
 
 
