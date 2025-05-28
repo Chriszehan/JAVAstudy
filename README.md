@@ -1506,6 +1506,23 @@ class Outer {
 
 用Static修饰的内部类和Innerclass有很大不同，它不再依附于Outer的实例，而是一个完全独立的类，因此无法引用Outer.this，但它可以访问Outer的private静态字段和静态方法。如果把StaticNested移到Outer之外，就失去了访问private的权限。
 
+## class版本
+
+JDK版本 也就是JVM版本，更准确地说是java.exe程序的版本
+
+低版本可以再高版本上运行 但是高版本不能再低版本运行
+
+但是可以在高版本的环境中指定输出一个兼容低版本的文件
+
+指定编译输出有两种方式，一种是在javac命令行中用参数--release设置：
+$javac --release 11 Main.java
+参数--release 11表示源码兼容Java 11，编译的class输出版本为Java 11兼容，即class版本55。
+
+第二种方式是用参数--source指定源码版本，用参数--target指定class版本：
+$javac --source 9 --target 11 Main.java
+上述命令如果使用Java 17的JDK编译，它会把源码视为Java 9兼容版本，并输出class为Java 11兼容版本。注意--release参数和--source --target参数只能二选一，不能同时设置。
+
+
 
 
 
