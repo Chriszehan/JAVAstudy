@@ -1523,21 +1523,71 @@ $javac --source 9 --target 11 Main.java
 上述命令如果使用Java 17的JDK编译，它会把源码视为Java 9兼容版本，并输出class为Java 11兼容版本。注意--release参数和--source --target参数只能二选一，不能同时设置。
 
 
+## 模块
 
+.class 文件时JVM看到的最小可执行文件，而一个大型程序需要编写很多的class，并生成一堆.class文件，很不便于管理，所以，jar文件就是class文件的容器。
 
+在Java 9 之前，一个大型java程序会生成自己的jar文件，同时引用依赖的第三方jar文件，而JVM自带的java标准库实际也是以jar文件形式存放的，这个文件交rt.jar
 
+如是自己开发的程序，除了自己的app.jar之外，还需要第三方的jar包，运行一个java程序，一般来说
 
+java -cp app.jar:a.jar:b.jar:c.jar com.liaoxuefeng.sample.Main
 
+如果漏写了某个运行时需要用到的jar，那么在运行期极有可能抛出ClassNotFoundException。
 
+所以，jar只是用于存放class的容器，它并不关心class之间的依赖。
 
+从java 9 之后,为了解决依赖的问题 引入module 以.jmod拆分rt.jar
 
+这些.jmod文件每一个都是一个模块，模块名就是文件名。例如：模块java.base对应的文件就是java.base.jmod。
 
+模块之间的依赖关系已经被写入到模块内的module-info.class文件了。
 
+所有的模块都直接或间接地依赖java.base模块，只有java.base模块不依赖任何模块，它可以被看作是“根模块”，好比所有的类都是从Object直接或间接继承而来。
 
+把一堆class封装为jar仅仅是一个打包的过程，而把一堆class封装为模块则不但需要打包，还需要写入依赖关系，并且还可以包含二进制代码（通常是JNI扩展）。
 
+此外，模块支持多版本，即在同一个模块中可以为不同的JVM提供不同的版本。
 
+### 编写模块
+首先创建模块和原有创建java项目是完全一样的，以oop-module工程为例，目录结构如下：
+oop-module
+├── bin
+├── build.sh
+└── src
+    ├── com
+    │   └── itranswarp
+    │       └── sample
+    │           ├── Greeting.java
+    │           └── Main.java
+    └── module-info.java
 
+  其中，bin目录存放编译后的class文件，src目录存放源码，按包名的目录结构存放，仅仅在src目录下多一个module-info.java这个文件，这就是模块的描述文件。
 
+module hello.world {
+	requires java.base; // 可不写，任何模块都会自动引入java.base
+	requires java.xml;
+}
+
+其中，module是关键字，后面的hello.world是模块名称 它的命名规范与包一致。花括号的requires xxx;表示这个模块需要引用的其他模块名称。
+
+除了java.base可以被自动映入外，这里我们引入了一个java.xml模块。
+
+当我们使用模块声明了依赖关系后，才能使用引入的模块。例如  Main.java 代码如下：
+
+package com.itranswarp.sample;
+
+// 必须引入java.xml模块后才能使用其中的类:
+import javax.xml.XMLConstants;
+
+public class Main {
+	public static void main(String[] args) {
+		Greeting g = new Greeting();
+		System.out.println(g.hello(XMLConstants.XML_NS_PREFIX));
+	}
+}
+
+如果把requires java.xml从module-info中去掉则会报错
 
 
 
